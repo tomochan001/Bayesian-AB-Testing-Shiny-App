@@ -12,7 +12,7 @@ library(scales)
 
 options(scipen = 999)
 
-header <- dashboardHeader(title = "BigTimeStats A/B Testing App", titleWidth = 300)
+header <- dashboardHeader(title = "メール施策A/Bテストアプリ", titleWidth = 400)
                           
 sidebar <- dashboardSidebar(disable = TRUE)
 
@@ -20,24 +20,23 @@ body <- dashboardBody(
     
     fluidRow(
         column(width = 2,
-            box(title = 'Directions',
-                status = "warning", solidHeader = TRUE,
-                p('1. Start by selecting your click thoughs (successes) for your control/test groups.'),
-                p('2. Next, select the # of Trials (i.e. impressions).'),
-                p('3. If you have CTR:'),
-                p('# of Successes = CTR * # of Trials'),
-                p('4. If you have prior knowledge about the success of the test, input it under the', strong('Prior'),
-                  ' section. Leave as 0 if no information available.'),
-                p('5. Adjust # of Simulations for better results. Higher number results in increased processing but slightly more accuracy'),
-                p('6. Select plot type'),
-                p('7. Click on Run (few sec)'),
+            box(title = '使用法',
+                status = "primary", solidHeader = TRUE,
+                p('1. 統制群（青色）＞「今回のA/Bテストの結果」のフォームに、統制群（前回と同じパターン）のクリック数と開封者数を入力してください。'),
+                p('2. 実験群（オレンジ色）＞「今回のA/Bテストの結果」のフォームに、実験群（今回実験してみたパターン）のクリック数と開封者数を入力してください。'),
+                p('※CTRだけわかっていてクリック数がわからない場合は、それぞれの開封者数にCTRをかけた値をクリック数に入れてください。'),
+                p('※このテストについて事前知識がある場合は、「事前分布」にそれぞれの値を入力してください。ない場合は0のままにしておいてください。'),
+                p('3. シミュレーションの回数を指定してください。回数を増やすと精度が少し上がりますが、処理負荷が増えます。'),
+                p('4. グラフのタイプを選択してください。'),
+                p('5. 準備ができたら、「実行」を押してください。'),
                 # p('-------------'),
-                p('Made by Adam Vagner'),
+                p('翻訳・改変：林　智彦'),
+                p(a('LinkedIn', href="https://www.linkedin.com/in/thayashi36/", target="_blank")),
+                p('Code posted on'),
+                p(a("Github",href="https://example.com", target="_blank")),
+                p(''),
+                p('Originally Made by Adam Vagner'),
                 p(a("LinkedIn", href="https://www.linkedin.com/in/adamvagner/", target="_blank")),
-                p(a("Blog", href="https://bigtimestats.wordpress.com", target="_blank")),
-                p('See', a("Source Code", href="https://github.com/BigTimeStats/AB-Testing-Shiny-Bayes", target="_blank"), 'for more info and license'),
-                p('Based on work at: ',a("Count Bayesie", href="https://www.countbayesie.com/blog/2015/4/25/bayesian-ab-testing", target="_blank")),
-                
                 width = NULL
             )
         ),
@@ -46,52 +45,57 @@ body <- dashboardBody(
                
                fluidRow(
                    column(width = 6,
-                        box(title = 'Control Inputs',
-                            status = "danger", solidHeader = TRUE,
+                        box(title = '1. 統制群（Control）',
+                            status = "info", solidHeader = TRUE,
                             
-                            h5('Prior'),
-                            
-                            numericInput("control.prior.success", 
-                                         p("# of Successes"), 
-                                         value = 0),
-                            numericInput("control.prior.trials", 
-                                         p("# of Trials"), 
-                                         value = 0),
-                            
-                            h5('Current A/B Experiment'),
+                            h5('今回のA/Bテストの結果'),
                             
                             numericInput("control.success", 
-                                         p("# of Successes"), 
+                                         p("クリック数"), 
                                          value = 15),
                             numericInput("control.trials", 
-                                         p("# of Trials"), 
+                                         p("開封者数"), 
                                          value = 100),
+                            p(' '),
+                            p(' '),
+                            
+                            h5('事前分布（通常は0のままで）'),
+                            
+                            numericInput("control.prior.success", 
+                                         p("クリック数"), 
+                                         value = 0),
+                            numericInput("control.prior.trials", 
+                                         p("開封者数"), 
+                                         value = 0),
                             width = NULL
                         )
                     ),
                 
                     column(width = 6,
-                           box(title = 'Test Inputs',
-                               status = "danger", solidHeader = TRUE,
+                           box(title = '2. 実験群（Test）',
+                               status = "warning", solidHeader = TRUE,
                                
-                               h5('Prior'),
+
+                               h5('今回のA/Bテストの結果'),
+                               
+                               numericInput("test.success", 
+                                            p("クリック数"), 
+                                            value = 25),
+                               numericInput("test.trials", 
+                                            p("開封者数"), 
+                                            value = 100),
+                               p(' '),
+                               p(' '),
+                               
+                               h5('事前分布（通常は0のままで）'),
                                
                                
                                numericInput("test.prior.success", 
-                                            p("# of Successes"), 
+                                            p("クリック数"), 
                                             value = 0),
                                numericInput("test.prior.trials", 
-                                            p("# of Trials"), 
+                                            p("開封者数"), 
                                             value = 0),
-                               
-                               h5('Current A/B Experiment'),
-                               
-                               numericInput("test.success", 
-                                            p("# of Successes"), 
-                                            value = 25),
-                               numericInput("test.trials", 
-                                            p("# of Trials"), 
-                                            value = 100),
                                
                                width = NULL
                            )
@@ -100,23 +104,23 @@ body <- dashboardBody(
                
                fluidRow(
                    column(width = 12,
-                          box(title = 'Simulation',
+                          box(title = '3. 4. 5. シミュレーション',
                               status = "danger", solidHeader = TRUE,
                               
                               numericInput("ntrials", 
-                                           p("# of Simulations (10,000 recommended)"), 
+                                           p("シミュレーションの回数（10,000を推奨）"), 
                                            value = 10000,
                                            min = 1,
                                            max = 100000),
                               
-                              selectInput("radio", p("Plot Type"),
+                              selectInput("radio", p("プロットの種類"),
                                            choices = list("Lift Curve" = 1, 
-                                                          "Histogram Comparison" = 2,
-                                                          "Density Plot Comparison" = 3), 
+                                                          "ヒストグラムの比較" = 2,
+                                                          "確率密度グラフの比較" = 3), 
                                            selected = 1),
                               
                               actionButton(inputId = "button", 
-                                           label = "Run"),
+                                           label = "シミュレーションを実行"),
                               
                               width = NULL
                           )
@@ -127,17 +131,17 @@ body <- dashboardBody(
         column(width = 6,
              fluidRow( 
                column(width = 6,
-                      box(title = 'Simulated Bayesian Probability',
+                      box(title = 'シミュレーションによるベイズ確率',
                             status = "info", solidHeader = TRUE,
-                          p('Simulated Probability Test > Control: '),
+                          p('2. 実験群が1. 対照群を上回る確率: '),
                           textOutput('superior'),
                             width = NULL
                       )
                ),
                column(width = 6,
-                      box(title = 'Classical T-Test',
+                      box(title = '伝統的なt検定',
                            status = "info", solidHeader = TRUE,
-                          p('Upper Tail P-Value: '),
+                          p('片側検定のP-値: '),
                           textOutput('ttest'),
                            width = NULL
                       )
