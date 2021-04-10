@@ -1,4 +1,3 @@
-
 library(DT)
 library(shiny)
 library(shinydashboard)
@@ -33,7 +32,7 @@ body <- dashboardBody(
                 p('翻訳・改変：林　智彦'),
                 p(a('LinkedIn', href="https://www.linkedin.com/in/thayashi36/", target="_blank")),
                 p('Code posted on'),
-                p(a("Github",href="https://example.com", target="_blank")),
+                p(a("Github",href="https://github.com/tomochan001/Bayesian-AB-Testing-Shiny-App", target="_blank")),
                 p(''),
                 p('Originally Made by Adam Vagner'),
                 p(a("LinkedIn", href="https://www.linkedin.com/in/adamvagner/", target="_blank")),
@@ -133,7 +132,7 @@ body <- dashboardBody(
                column(width = 6,
                       box(title = 'シミュレーションによるベイズ確率',
                             status = "info", solidHeader = TRUE,
-                          p('2. 実験群が1. 対照群を上回る確率: '),
+                          p('2. 実験群が1. 統制群を上回る確率: '),
                           textOutput('superior'),
                             width = NULL
                       )
